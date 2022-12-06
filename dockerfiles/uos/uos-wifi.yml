@@ -35,6 +35,8 @@ services:
       - /sys:/sys
       - /run/resolvconf/resolv.conf:/etc/system-resolv.conf
       - /var/services/wlan:/etc
+      - /etc/sshd.passwd:/etc/passwd
+      - /etc/sshd.group:/etc/group
     runtime:
         mkdir: ["/var/services/wlan"]
   - name: getty
@@ -206,6 +208,7 @@ files:
       guest:x:405:100:guest:/dev/null:/sbin/nologin
       nobody:x:65534:65534:nobody:/:/sbin/nologin
       uos:x:1000:1000:uos:/home/uos:/bin/ash
+      messagebus:x:27:27:D-Bus User:/dev/null:/bin/false
     mode: "644"
   - path: etc/sshd.group
     contents: |
@@ -257,4 +260,5 @@ files:
       nogroup:x:65533:
       nobody:x:65534:
       uos:x:1000:
+      messagebus:x:27:
     mode: "644"
