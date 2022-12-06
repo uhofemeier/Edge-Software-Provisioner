@@ -10,10 +10,13 @@ RUN apk add --no-cache \
     inotify-tools \
     tini \
     wireless-tools \
-    wpa_supplicant 
+    iwd \
+    dbus \
+    openresolv
 
 COPY init.sh /usr/local/bin/init.sh
-COPY wpa_supplicant.conf.template /opt/wpa_supplicant.conf.template
+COPY iwd.conf.template /opt/iwd.conf.template
+COPY iwd.main.template /opt/iwd.main.template
 
 WORKDIR /
 
