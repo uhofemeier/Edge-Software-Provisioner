@@ -32,6 +32,7 @@ if podman -v >/dev/null 2>&1; then
         mkdir -p /tmp/host-builder && \
         mkdir -p $(pwd)/lib/docker-host && \
         docker run -d --privileged --name hostbuilder-docker ${DOCKER_RUN_ARGS} -v /tmp/host-builder:/var/run -v $(pwd)/lib/docker-host:/var/lib/docker -v /lib/modules:/lib/modules docker:19.03.12-dind && \
+            docker exec -t hostbuilder-docker sh -c 'if [ ! -d \"/sys/fs/cgroup/systemd\" ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi' && \
         sleep 10" \
         ../../${LOG_FILE}
     run "(1/12) Downloading and preparing the kernel" \

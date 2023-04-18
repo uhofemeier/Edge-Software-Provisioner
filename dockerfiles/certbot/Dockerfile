@@ -1,7 +1,7 @@
 # Copyright (C) 2020 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
-FROM certbot/certbot:v1.21.0
+FROM docker.io/certbot/certbot:v1.21.0
 LABEL maintainer "Bryan J Rodriguez <bryan.j.rodriguez@intel.com>"
 
 RUN apk --no-cache add \

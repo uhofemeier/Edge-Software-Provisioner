@@ -1,10 +1,10 @@
 # Copyright (C) 2021 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
-FROM registry.access.redhat.com/ubi8/ubi as kernel-builder
+FROM registry.access.redhat.com/ubi9/ubi as kernel-builder
 LABEL maintainer "Bryan J Rodriguez <bryan.j.rodriguez@intel.com>"
 
-ARG KERNEL_VERSION=4.18.0-348.2.1.el8_5
+ARG KERNEL_VERSION=5.14.0-162.23.1.el9_1
 ARG ARCH=x86_64
 
 RUN dnf install -y \

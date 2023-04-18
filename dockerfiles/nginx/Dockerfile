@@ -1,7 +1,7 @@
 # Copyright (C) 2020 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
-FROM nginx:1.21.3-alpine
+FROM docker.io/library/nginx:1.21.3-alpine
 LABEL maintainer "Bryan J Rodriguez <bryan.j.rodriguez@intel.com>"
 
 RUN apk --no-cache add \
