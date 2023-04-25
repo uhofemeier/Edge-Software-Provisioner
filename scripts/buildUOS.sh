@@ -31,8 +31,7 @@ if podman -v >/dev/null 2>&1; then
         if ! (docker -v >/dev/null 2>&1); then yum install -q -y podman-docker > /dev/null 2>&1; fi; \
         mkdir -p /tmp/host-builder && \
         mkdir -p $(pwd)/lib/docker-host && \
-        docker run -d --privileged --name hostbuilder-docker ${DOCKER_RUN_ARGS} -v /tmp/host-builder:/var/run -v $(pwd)/lib/docker-host:/var/lib/docker -v /lib/modules:/lib/modules docker:19.03.12-dind && \
-            docker exec -t hostbuilder-docker sh -c 'if [ ! -d \"/sys/fs/cgroup/systemd\" ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi' && \
+        docker run -d --privileged --name hostbuilder-docker ${DOCKER_RUN_ARGS} -v /tmp/host-builder:/var/run -v $(pwd)/lib/docker-host:/var/lib/docker -v /lib/modules:/lib/modules docker:20.10.8-dind && \
         sleep 10" \
         ../../${LOG_FILE}
     run "(1/12) Downloading and preparing the kernel" \
@@ -41,7 +40,7 @@ if podman -v >/dev/null 2>&1; then
         docker exec -i hostbuilder-docker docker tag localhost/uos/kernel:latest uos/kernel:latest" \
         ../../${LOG_FILE}
     run "(2/12) Downloading and preparing the initrd" \
-        "docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/host-builder:/var/run docker:19.03.12-dind sh -c '\
+        "docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/host-builder:/var/run docker:20.10.8-dind sh -c '\
         cd /uos && \
         docker build --rm ${DOCKER_BUILD_ARGS} -t uos/dyninit:v1.0 -f ./Dockerfile.dyninit .'" \
         ../../${LOG_FILE}
@@ -52,7 +51,7 @@ if podman -v >/dev/null 2>&1; then
         logMsg "(4/12) Skipping WiFi Tools"
     else 
         run "(3/12) Building WiFi Tools" \
-            "docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/host-builder:/var/run docker:19.03.12-dind sh -c '\
+            "docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/host-builder:/var/run docker:20.10.8-dind sh -c '\
             cd /uos && \
             docker build --rm ${DOCKER_BUILD_ARGS} -t uos/wlan:v1.0 dockerfiles/wlan'" \
             ../../${LOG_FILE}
@@ -74,10 +73,10 @@ if podman -v >/dev/null 2>&1; then
             mkdir -p /tmp/builder && \
             mkdir -p $(pwd)/lib/docker && \
             if [ ! -d '/sys/fs/cgroup/systemd' ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi && \
-            docker run -d --privileged --name builder-docker ${DOCKER_RUN_ARGS} -v /tmp/builder:/var/run -v $(pwd)/lib/docker:/var/lib/docker docker:19.03.12-dind && \
+            docker run -d --privileged --name builder-docker ${DOCKER_RUN_ARGS} -v /tmp/builder:/var/run -v $(pwd)/lib/docker:/var/lib/docker docker:20.10.8-dind && \
             sleep 10 && \
             docker exec -t builder-docker sh -c 'if [ ! -d \"/sys/fs/cgroup/systemd\" ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi' && \
-            docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/builder:/var/run -v /tmp/host-builder:/tmp/host-docker docker:19.03.12-dind sh -c '\
+            docker run -t --rm --privileged ${DOCKER_RUN_ARGS} -v $(pwd):/uos -v /tmp/builder:/var/run -v /tmp/host-builder:/tmp/host-docker docker:20.10.8-dind sh -c '\
                 apk update && apk add --no-cache \
                     alpine-sdk \
                     coreutils \
@@ -128,11 +127,11 @@ else
             docker rm -f builder-docker >/dev/null 2>&1; \
             rm -fr /tmp/builder && \
             if [ ! -d '/sys/fs/cgroup/systemd' ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi && \
-            docker run -d --privileged --name builder-docker ${DOCKER_RUN_ARGS} -v /tmp/builder:/var/run -v $(pwd)/lib/docker:/var/lib/docker docker:19.03.12-dind && \
+            docker run -d --privileged --name builder-docker ${DOCKER_RUN_ARGS} -v /tmp/builder:/var/run -v $(pwd)/lib/docker:/var/lib/docker docker:20.10.8-dind && \
             echo 'Waiting for Docker'; \
             while (! docker -H unix:////tmp/builder/docker.sock ps > /dev/null 2>&1); do echo -n '.'; sleep 0.5; done; echo 'ready' && \
             docker exec -t builder-docker sh -c 'if [ ! -d \"/sys/fs/cgroup/systemd\" ]; then mkdir /sys/fs/cgroup/systemd && mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd; fi' && \
-            docker run -t ${DOCKER_RUN_ARGS} --rm -v $(pwd):/uos -v /tmp/builder:/var/run -v /var/run:/tmp/host-docker docker:19.03.12-dind sh -c '\
+            docker run -t ${DOCKER_RUN_ARGS} --rm -v $(pwd):/uos -v /tmp/builder:/var/run -v /var/run:/tmp/host-docker docker:20.10.8-dind sh -c '\
                 apk update && apk add --no-cache \
                     alpine-sdk \
                     coreutils \
