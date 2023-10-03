@@ -11,7 +11,7 @@ networks:
 
 services:
   core:
-    image: builder-core
+    image: uhofemeier/builder-core
     environment:
       - BUILDER_PATH=${PWD}
       - PATH=${PWD}:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -44,10 +44,10 @@ services:
         max-size: "1m"
 
   web:
-    image: builder-web
+    image: uhofemeier/builder-web
     restart: always
     environment:
-      - CN=edgebuilder.local
+      - CN=192.168.1.16
       - O=edgebuilder
       - OU=edgebuilder
       - C=US
@@ -87,7 +87,7 @@ services:
         max-size: "1m"
 
   certbot:
-    image: builder-certbot
+    image: uhofemeier/builder-certbot
     restart: on-failure
     environment:
       - http_proxy=${http_proxy:-}
@@ -115,7 +115,7 @@ services:
         max-size: "1m"
 
   dnsmasq:
-    image: builder-dnsmasq
+    image: uhofemeier/builder-dnsmasq
     restart: always
     environment:
       - http_proxy=${http_proxy:-}
@@ -179,7 +179,7 @@ services:
         max-size: "1m"
 
   squid:
-    image: builder-squid
+    image: uhofemeier/builder-squid
     restart: always
     environment:
       - CN=squid.local
@@ -211,7 +211,7 @@ services:
         max-size: "1m"
 
   mirror:
-    image: builder-gitea
+    image: uhofemeier/builder-gitea
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -246,7 +246,7 @@ services:
         max-size: "1m"
 
   smb:
-    image: builder-smb
+    image: uhofemeier/builder-smb
     restart: always
     environment:
       - http_proxy=${http_proxy:-}
@@ -273,7 +273,7 @@ services:
         max-size: "1m"
 
   dyn-profile:
-    image: builder-dyn-profile
+    image: uhofemeier/builder-dyn-profile
     ports:
       - 8580:8080
     depends_on:
