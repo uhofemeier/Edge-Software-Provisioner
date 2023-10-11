@@ -1,6 +1,6 @@
 ---
 
-# Copyright (C) 2019 Intel Corporation
+# Copyright (C) 2023 Intel Corporation
 # SPDX-License-Identifier: BSD-3-Clause
 
 version: '3'
@@ -11,8 +11,9 @@ networks:
 
 services:
   core:
-    image: uhofemeier/builder-core
+    image:  intel/esp-core
     environment:
+      - CONTAINER_IMAGES=intel/esp-core intel/esp-gitea intel/esp-dnsmasq intel/esp-squid intel/esp-web intel/esp-git intel/esp-aws-cli intel/esp-uos-builder intel/esp-qemu intel/esp-certbot intel/esp-smb intel/esp-dyn-profile intel/esp-logging-agent intel/esp-uos-kernel intel/esp-uos-wifi intel/esp-uos-firmware-wifi intel/esp-uos-firmware-lan intel/esp-uos-dyninit
       - BUILDER_PATH=${PWD}
       - PATH=${PWD}:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
       - http_proxy=${http_proxy:-}
@@ -44,7 +45,7 @@ services:
         max-size: "1m"
 
   web:
-    image: uhofemeier/builder-web
+    image:  intel/esp-web
     restart: always
     environment:
       - CN=192.168.1.16
@@ -87,7 +88,7 @@ services:
         max-size: "1m"
 
   certbot:
-    image: uhofemeier/builder-certbot
+    image:  intel/esp-certbot
     restart: on-failure
     environment:
       - http_proxy=${http_proxy:-}
@@ -115,7 +116,7 @@ services:
         max-size: "1m"
 
   dnsmasq:
-    image: uhofemeier/builder-dnsmasq
+    image:  intel/esp-dnsmasq
     restart: always
     environment:
       - http_proxy=${http_proxy:-}
@@ -151,6 +152,9 @@ services:
       options:
         max-file: "5"
         max-size: "1m"
+      # driver: "fluentd"
+      # options:
+      #   fluentd-address: "localhost:24224"
 
   registry-mirror:
     image: registry:2
@@ -179,7 +183,7 @@ services:
         max-size: "1m"
 
   squid:
-    image: uhofemeier/builder-squid
+    image:  intel/esp-squid
     restart: always
     environment:
       - CN=squid.local
@@ -211,7 +215,7 @@ services:
         max-size: "1m"
 
   mirror:
-    image: uhofemeier/builder-gitea
+    image:  intel/esp-gitea
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -246,7 +250,7 @@ services:
         max-size: "1m"
 
   smb:
-    image: uhofemeier/builder-smb
+    image:  intel/esp-smb
     restart: always
     environment:
       - http_proxy=${http_proxy:-}
@@ -273,7 +277,7 @@ services:
         max-size: "1m"
 
   dyn-profile:
-    image: uhofemeier/builder-dyn-profile
+    image:  intel/esp-dyn-profile
     ports:
       - 8580:8080
     depends_on:
@@ -292,3 +296,10 @@ services:
       - HTTP_PROXY=${HTTP_PROXY:-}
       - HTTPS_PROXY=${HTTPS_PROXY:-}
       - NO_PROXY=${NO_PROXY:-}
+
+  logging-server:
+    image: fluent/fluent-bit:2.1.4
+    network_mode: host
+    restart: always
+    volumes:
+      - ./data/etc:/fluent-bit/etc
