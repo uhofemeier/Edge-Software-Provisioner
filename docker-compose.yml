@@ -48,7 +48,7 @@ services:
     image:  intel/esp-web
     restart: always
     environment:
-      - CN=192.168.1.16
+      - CN=edgebuilder.local
       - O=edgebuilder
       - OU=edgebuilder
       - C=US
