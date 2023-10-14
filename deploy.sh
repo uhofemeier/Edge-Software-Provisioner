@@ -26,7 +26,7 @@ fi
 mkdir -p /opt/esp && \
 cd /opt/esp && \
 wget --no-check-certificate -O /opt/esp/docker-compose.yml https://raw.githubusercontent.com/uhofemeier/Edge-Software-Provisioner/master/docker-compose.yml && \
-docker-compose up -d core mirror && \
+docker-compose up -d core mirror web && \
 echo "Waiting for Intel ESP images to be downloaded." && \
 while (! ls /opt/esp/run.sh > /dev/null 2>&1 ); do \
 	echo -n "."; \
