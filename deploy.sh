@@ -31,5 +31,5 @@ echo "Waiting for Intel ESP images to be downloaded." && \
 while (! ls /opt/esp/run.sh > /dev/null 2>&1 ); do \
 	echo -n "."; \
 	sleep 5; \
-done && \
+done && 
 #./run.sh -n
